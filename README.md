@@ -1,64 +1,50 @@
-Project: Slowly Changing Dimensions in Snowflake Using Streams and Tasks
-Overview
-This project builds a real-time data pipeline for continuous ingestion and transformation into Snowflake, implementing Change Data Capture (CDC) and Slowly Changing Dimensions (SCD) to manage historical data effectively.
+# Slowly Changing Dimensions Pipeline with Snowflake, Apache NiFi, and Streams
 
-Tech Stack
-Languages: Python3, JavaScript, SQL
+## Introduction  
+This project builds a real-time data pipeline for continuous ingestion and transformation into a Snowflake data warehouse. It implements Change Data Capture (CDC) and Slowly Changing Dimensions (SCD) to maintain historical data accuracy.
 
-Services: Apache NiFi, Amazon S3, Snowflake, Amazon EC2, Docker
+## Tech Stack  
+- **Languages:** Python3, JavaScript, SQL  
+- **Services:** Apache NiFi, Amazon S3, Snowflake, Amazon EC2, Docker  
 
-Dataset
-Synthetic user data is generated using Python’s Faker library and stored as CSV files, including fields like Customer_id, First_name, Last_name, Email, Street, State, and Country.
+## Dataset  
+Synthetic user data generated using Python Faker library and saved as CSV files with fields:  
+`Customer_id`, `First_name`, `Last_name`, `Email`, `Street`, `State`, `Country`.
 
-Process Flow
-Data Generation: Python scripts on EC2 generate data and save it locally.
+## Process Flow  
+1. Data generation on Amazon EC2 using Python Faker scripts.  
+2. Apache NiFi monitors local folder and uploads new CSV files to Amazon S3.  
+3. Snowpipe ingests files from S3 into Snowflake staging tables automatically.  
+4. Scheduled Snowflake tasks execute stored procedures for CDC via MERGE commands.  
+5. Snowflake Streams track changes to support Slowly Changing Dimensions (SCD) Type-1 and Type-2.
 
-Data Movement: Apache NiFi monitors and uploads files to S3 automatically.
+## Key Features  
+- Real-time data ingestion pipeline using NiFi and Snowpipe.  
+- CDC implementation with Snowflake streams and tasks.  
+- SCD Types 1 and 2 for historical data management.  
+- Automated data flow from generation to transformation.
 
-Data Ingestion: Snowpipe ingests data from S3 into a Snowflake staging table.
+## Benefits  
+- Near real-time updates in Snowflake for analytics.  
+- Maintains historical integrity of dimension data.  
+- Scalable architecture using cloud-native tools.
 
-Data Transformation: Scheduled Snowflake tasks run stored procedures every minute:
+## FAQs
 
-Merge updates target table with CDC logic.
+### What are Slowly Changing Dimensions (SCD)?  
+SCD techniques track changes in dimension data over time, preserving historical context.  
+- **Type 0:** No changes tracked.  
+- **Type 1:** Overwrites old data.  
+- **Type 2:** Preserves full history with multiple records.  
+- **Type 3:** Stores current and previous values.
 
-Truncate staging table for next batch.
+### Technologies Used  
+- **Apache NiFi:** Automates and manages data flows.  
+- **Docker:** Containerizes applications for consistency.  
+- **Amazon EC2:** Provides scalable virtual machines.  
+- **Amazon S3:** Object storage service for files.  
+- **Snowflake:** Cloud data warehouse with components like Snowpipe, Streams, and Tasks.
 
-Historical Data: Snowflake Streams track changes to maintain SCD-compliant history.
+---
 
-Key Learnings
-Fundamentals of SCD types and CDC.
-
-Using AWS EC2, NiFi, Docker, and Snowflake components.
-
-Building scalable, real-time data pipelines in the cloud.
-
-Benefits
-Enables near real-time data updates in Snowflake.
-
-Maintains accurate historical records with SCD techniques.
-
-Ensures data integrity via CDC merges.
-
-Scalable architecture handles large data volumes efficiently.
-
-FAQs
-What is Slowly Changing Dimensions (SCD)?
-SCD tracks and manages changes in dimension data over time in a data warehouse, preserving historical accuracy. Common types include:
-
-Type 0: No changes stored; original data remains.
-
-Type 1: Overwrites old data with new values (no history).
-
-Type 2: Preserves full history by creating new records on changes.
-
-Type 3: Stores previous and current values in the same record.
-
-Apache NiFi: Automates and manages data flow between systems with real-time control.
-
-Docker: Containerizes applications to ensure consistent execution across environments.
-
-Amazon EC2: Scalable virtual servers for running applications in the cloud.
-
-Amazon S3: Secure, scalable object storage for any volume of data.
-
-Snowflake: Cloud-native data warehouse platform supporting storage, processing, and analytics, featuring components like Warehouses, Snowpipe, Streams, and Tasks.
+Feel free to customize or ask if you want me to add sections like Installation, Usage, or Contribution!
